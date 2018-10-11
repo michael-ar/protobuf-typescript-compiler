@@ -1,0 +1,14 @@
+{
+  "name": "protobuf-typescript-compiler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "compile": "./compile.sh"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "prettier": "^1.14.3"
+  }
+}
