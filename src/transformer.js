@@ -28,23 +28,37 @@ function transformer(ast) {
       },
     },
 
-    Field: {
-      enter(node, parent) {
-        if (node.value.type === Types.Oneof) {
-          const transformed = node.value.children.map(x => ({
-            ...x,
-            optional: 'true',
-          }));
-          transformed.map(x => parent.nodes.push(x));
-        }
-      },
-    },
     Enum: {
       enter: noTransform,
     },
 
     Message: {
-      enter: noTransform,
+      enter(node, parent) {
+        const oneofs = node.nodes.filter(x => x.type === Types.Oneof);
+        if (oneofs.length) {
+          const messages = oneofs.reduce((acc, v) => {
+            const m = v.children.map(x => ({
+              type: Types.Message,
+              name: x.name,
+              export: false,
+              nodes: [
+                { ...x, optional: false },
+                {
+                  type: Types.Field,
+                  name: v.name,
+                  value: {
+                    type: Types.CustomType,
+                    value: `'${x.name}'`,
+                  },
+                },
+              ],
+            }));
+            acc.concat(m);
+            return acc.concat(m);
+          }, []);
+          parent.body.body = parent.body.body.concat(messages);
+        }
+      },
     },
 
     Service: {
@@ -63,7 +77,16 @@ function transformer(ast) {
     }
     return acc;
   }, {});
-  newAst.modules = Object.values(mergedModules);
+  const deduped = Object.entries(mergedModules).reduce((acc, [k, v]) => {
+    const dedupedMod = v.body.reduce(
+      (acc, v, i) => ((acc[v.name || i] = v), acc),
+      {},
+    );
+    v.body = Object.values(dedupedMod);
+    acc[k] = v;
+    return acc;
+  }, {});
+  newAst.modules = Object.values(deduped);
   return newAst;
 }
 

@@ -14,20 +14,12 @@ function traverser(ast, visitor) {
       methods.enter(node, parent);
     }
 
-    // console.log('node!');
-    // console.dir(node);
     switch (node.type) {
       case Types.Program:
         traverseArray(node.body, node);
         break;
 
       case Types.Module:
-        // console.log(node.type);
-        // console.dir(node.body);
-        // console.dir(parent);
-        // console.log('module!');
-        // console.dir(node);
-
         traverseArray(node.body.body, node);
         break;
 

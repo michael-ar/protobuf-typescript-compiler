@@ -12,7 +12,7 @@ const printer = node => {
           x => x.body.body.find(x => x.type === Types.PackageDeclaration).value,
         );
       }
-      const depString = `${[ ...new Set(deps) ]
+      const depString = `${[...new Set(deps)]
         .filter(x => x !== namespace)
         .map(
           x =>
@@ -28,14 +28,31 @@ const printer = node => {
       `;
 
     case Types.Message:
-      return `export type ${node.name} = {
-        ${node.nodes.map(printer).join(';\n')}${node.nodes.length ? ';' : ''}
-      }`;
+      const oneofs = node.nodes.filter(x => x.type === Types.Oneof);
+      let oneofString;
+      if (oneofs.length) {
+        oneofString = oneofs
+          .reduce((acc, v) => {
+            const names = v.children.map(x => x.name);
+            const str = `(${names.join(' | ')})`;
+            acc.push(str);
+            return acc;
+          }, [])
+          .join(' & ');
+      }
+      return `${node.export ? 'export ' : ''}type ${node.name} = {
+        ${node.nodes
+          .filter(x => x.type !== Types.Oneof)
+          .map(printer)
+          .join(';\n')}${
+        node.nodes.filter(x => x.type !== Types.Oneof).length ? ';' : ''
+      }
+      }${oneofString ? ` & ${oneofString}` : ''}\n`;
 
     case Types.Enum:
       return `export type ${node.name} = ${node.fields
         .map(field => `'${field.value}'`)
-        .join(' | ')};`;
+        .join(' | ')};\n`;
 
     case Types.Field:
       return `${node.name}${node.optional === 'true' ? '?' : ''}: ${
@@ -47,7 +64,11 @@ const printer = node => {
     }
 
     case Types.Oneof: {
-      return `${node.children.map(field => `'${field.name}'`).join(' | ')}`;
+      //   type Customer = {
+      //     x?: string;
+      // } & (incorporatedBusiness | individual | soleTrader);
+
+      return; // `${node.children.map(field => `'${field.name}'`).join(' | ')}`;
     }
 
     case Types.CustomType:

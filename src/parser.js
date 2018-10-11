@@ -185,16 +185,16 @@ const parser = (tokens, resolvedModules = new Map(), entrypoint) => {
     if (token.value === 'oneof') {
       next();
       const node = {
-        type: Types.Field,
+        type: Types.Oneof,
         name: token.value,
-        value: {
-          type: Types.Oneof,
-          children: [],
-        },
+        children: [],
+        // value: {
+        //   type: Types.Oneof,
+        // },
       };
       next(2);
       while (!isBlockEnd(token)) {
-        node.value.children.push(walk());
+        node.children.push(walk());
         token = tokens[current];
       }
       current++;
@@ -274,6 +274,7 @@ const parser = (tokens, resolvedModules = new Map(), entrypoint) => {
           const node = {
             type: Types[type],
             name: token.value,
+            export: true,
             nodes: [],
           };
           next(2);
