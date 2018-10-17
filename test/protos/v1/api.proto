@@ -1,12 +1,12 @@
 syntax = "proto3";
 
-import "messages/input/messages.proto";
-import "messages/output/messages.proto";
+import "messages/request/messages.proto";
+import "messages/response/messages.proto";
 
 package test;
 
 service V1 {
-  rpc Test(input.Message) returns (output.Message) {
+  rpc Test(request.Message) returns (response.Message) {
     option (google.api.http).get = "/v1/test";
   }
 }

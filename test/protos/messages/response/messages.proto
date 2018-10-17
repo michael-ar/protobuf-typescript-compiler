@@ -1,0 +1,10 @@
+syntax = "proto3";
+import "messages/shared/messages.proto";
+package test.response;
+
+message Message {
+  shared.Message sharedMessage = 10 [
+    descKey = "sharedMessage",
+    optional = false
+  ];
+}

@@ -1,6 +1,6 @@
 syntax = "proto3";
 import "messages/shared/messages.proto";
-package test.input;
+package test.request;
 
 enum Enum {
     UNKNOWN = 0;

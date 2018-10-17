@@ -6,10 +6,12 @@ const cwd = process.cwd();
 const rm = name => fs.unlinkSync(path.resolve(cwd, `./output/${name}.ts`));
 const read = filePath =>
   fs.readFileSync(path.resolve(cwd, `./${filePath}`), { encoding: 'utf8' });
-const files = ['input', 'output', 'shared'];
+const files = ['request', 'response', 'shared'];
 
 beforeEach(() => {
-  files.forEach(name => rm(name));
+  try {
+    files.forEach(name => rm(name));
+  } catch (e) {}
 });
 
 test('compiler produces expected output', () => {
