@@ -55,7 +55,7 @@ const printer = node => {
         .join(' | ')};\n`;
 
     case Types.Field:
-      return `${node.name}${node.optional === 'true' ? '?' : ''}: ${
+      return `${node.name}${node.optional ? '?' : ''}: ${
         node.repeated ? 'Array<' : ''
       }${printer(node.value)}${node.repeated ? '>' : ''}`;
 

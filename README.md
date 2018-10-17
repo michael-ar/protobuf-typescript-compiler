@@ -2,5 +2,5 @@
 
 ## usage 
 ```bash
-./compile.sh path/to/proto
+./compile.sh path/to/proto-root/ ./path/to/entry.proto
 ```

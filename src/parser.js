@@ -24,7 +24,7 @@ const isField = token =>
   (token.type === Tokens.Keyword && token.value === 'repeated') ||
   token.type === Tokens.Identifier;
 
-const parser = (tokens, resolvedModules = new Map(), entrypoint) => {
+const parser = (tokens, resolvedModules = new Map(), root) => {
   let current = 0;
 
   const walk = () => {
@@ -94,7 +94,8 @@ const parser = (tokens, resolvedModules = new Map(), entrypoint) => {
       };
       const walkField = () => {
         const name = () => (node.name = token.value);
-        const optional = () => (node.optional = token.value);
+        const optional = () =>
+          (node.optional = token.value === 'true' ? true : false);
         const repeated = () => (node.repeated = true);
 
         switch (token.type) {
@@ -188,9 +189,6 @@ const parser = (tokens, resolvedModules = new Map(), entrypoint) => {
         type: Types.Oneof,
         name: token.value,
         children: [],
-        // value: {
-        //   type: Types.Oneof,
-        // },
       };
       next(2);
       while (!isBlockEnd(token)) {
@@ -213,15 +211,9 @@ const parser = (tokens, resolvedModules = new Map(), entrypoint) => {
             };
             if (!resolvedModules.has(moduleName)) {
               resolvedModules.set(moduleName, {});
-              const filepath = path.resolve(
-                process.cwd(),
-                entrypoint, // TODO: replace with protobuf root to avoid next line
-                '../../',
-                moduleName,
-              );
+              const filepath = path.resolve(root, moduleName);
               const file = fs.readFileSync(filepath, { encoding: 'utf8' });
-              // TODO: fix resolvedModule implemntation
-              const output = parser(tokenizer(file), undefined, entrypoint);
+              const output = parser(tokenizer(file), resolvedModules, root);
               resolvedModules.set(moduleName, output);
               node.body = output;
             } else {

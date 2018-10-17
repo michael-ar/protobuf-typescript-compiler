@@ -5,14 +5,14 @@ const parser = require('./parser');
 const transformer = require('./transformer');
 const printer = require('./printer');
 
-const entrypoint = fs.readFileSync(
-  `${path.resolve(process.cwd(), process.argv[2])}`,
-  { encoding: 'utf8' },
-);
+const [_, __, root, entrypoint] = process.argv;
+const proto = fs.readFileSync(path.resolve(process.cwd(), root, entrypoint), {
+  encoding: 'utf8',
+});
 
 const compiler = input => {
   const tokens = tokenizer(input);
-  const ast = parser(tokens, new Map(), process.argv[2]);
+  const ast = parser(tokens, new Map(), root);
   const newAst = transformer(ast);
   const output = newAst.modules.map(printer);
   output.forEach((str, i) =>
@@ -27,8 +27,7 @@ const compiler = input => {
       },
     ),
   );
-
   return output;
 };
 
-compiler(entrypoint);
+compiler(proto);

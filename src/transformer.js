@@ -29,7 +29,12 @@ function transformer(ast) {
     },
 
     Enum: {
-      enter: noTransform,
+      enter(node, parent) {
+        parent.body.body.push({
+          ...node,
+          fields: node.fields.filter(x => x.value !== 'UNKNOWN'),
+        });
+      },
     },
 
     Message: {
@@ -46,6 +51,7 @@ function transformer(ast) {
                 {
                   type: Types.Field,
                   name: v.name,
+                  optional: true,
                   value: {
                     type: Types.CustomType,
                     value: `'${x.name}'`,
