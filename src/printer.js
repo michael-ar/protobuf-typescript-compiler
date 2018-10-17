@@ -62,18 +62,11 @@ const printer = node => {
       return `{ [x: ${printer(node.key)}]: ${printer(node.value)} }`;
     }
 
-    case Types.Oneof: {
-      //   type Customer = {
-      //     x?: string;
-      // } & (incorporatedBusiness | individual | soleTrader);
-
-      return; // `${node.children.map(field => `'${field.name}'`).join(' | ')}`;
-    }
-
     case Types.CustomType:
     case Types.Type:
       return node.value;
 
+    case Types.Oneof:
     case Types.ImportDeclaration:
     case Types.SyntaxDeclaration:
     case Types.PackageDeclaration:

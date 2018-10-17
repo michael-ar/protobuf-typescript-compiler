@@ -72,8 +72,6 @@ function transformer(ast) {
     },
   });
 
-  // At the end of our transformer function we'll return the new ast that we
-  // just created.
   const unnestModules = Object.values(newAst.modules).map(x => x.body);
   const mergedModules = unnestModules.reduce((acc, mod) => {
     const name = mod.body.find(x => x.type === 'PackageDeclaration').value;
