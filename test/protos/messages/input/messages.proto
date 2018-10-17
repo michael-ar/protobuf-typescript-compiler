@@ -1,0 +1,60 @@
+syntax = "proto3";
+import "messages/shared/messages.proto";
+package test.input;
+
+enum Enum {
+    UNKNOWN = 0;
+    ONE = 1;
+    TWO = 2;
+}
+
+message CustomType {
+  string bar = 1 [
+    optional = true
+  ];
+}
+
+message Message {
+  string foo = 1 [
+    descKey = "foo",
+    optional = false
+  ];
+  Enum enumField = 2 [
+    descKey = "enum",
+    optional = false
+  ];
+  repeated string repeatedField = 3 [
+    descKey = "repeatedField",
+    optional = true
+  ];
+  CustomType custom = 4 [
+    descKey = "custom",
+    optional = false
+  ];
+  map<string, string> mapField = 5 [
+    descKey = "map",
+    optional = true
+  ];
+  oneof oneofField {
+    string optionA = 6 [
+      descKey = "optionA",
+        optional = false
+    ];
+    string optionB = 7 [
+      descKey = "optionB",
+        optional = false
+    ];
+  }
+  bool boolean = 8 [
+    descKey = "boolean",
+    optional = true
+  ];
+  int32 int = 9 [
+    descKey = "int",
+    optional = true
+  ];
+  shared.Message sharedMessage = 10 [
+    descKey = "sharedMessage",
+    optional = false
+  ];
+}

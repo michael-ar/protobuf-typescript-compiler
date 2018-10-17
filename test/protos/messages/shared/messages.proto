@@ -1,0 +1,9 @@
+syntax = "proto3";
+package test.shared;
+
+message Message {
+  string baz = 1 [
+    descKey = "baz",
+    optional = false
+  ];
+}

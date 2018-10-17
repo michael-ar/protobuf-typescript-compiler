@@ -10,6 +10,7 @@ const typeMap = {
   'document.Create': 'Create',
   bool: 'boolean',
   bytes: 'string',
+  int32: 'number',
 };
 
 const sentenceCase = string => string.charAt(0).toUpperCase() + string.slice(1);

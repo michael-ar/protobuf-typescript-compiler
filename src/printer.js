@@ -16,10 +16,9 @@ const printer = node => {
         .filter(x => x !== namespace)
         .map(
           x =>
-            `import * as ${x.replace('paybase.', '')} from './${x.replace(
-              'paybase.',
-              '',
-            )}';`,
+            `import * as ${x.split('.').slice(-1)} from './${x
+              .split('.')
+              .slice(-1)}';`,
         )
         .join('\n')}\n`;
 

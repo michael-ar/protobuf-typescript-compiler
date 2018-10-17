@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "compile": "./compile.sh"
+    "compile": "./compile.sh",
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "jest": "^23.6.0",
     "prettier": "^1.14.3"
   }
 }
